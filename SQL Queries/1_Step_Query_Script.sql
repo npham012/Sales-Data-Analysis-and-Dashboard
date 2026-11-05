@@ -1,0 +1,111 @@
+-- =====================================================================
+-- 1-STEP PIPELINE (BigQuery): produces the same `cleaned_sales` table as
+-- 3_Layer_Data_Processing_Script.sql, in a single statement.
+--
+-- Change log vs. the previous version: see the header of the 3-layer script.
+-- The 1-step version no longer filters each sheet before transforming it, because
+-- the corrected logic needs every row (canonical product names, matching
+-- cancellations to orders). The old benchmark comparison is therefore
+-- out of date; re-run the benchmarks before quoting them.
+-- =====================================================================
+
+-- Set to FALSE to keep orders that were later cancelled in full.
+DECLARE exclude_reversed_orders BOOL DEFAULT TRUE;
+
+CREATE OR REPLACE TABLE `online_retail_2_dataset.cleaned_sales` AS
+WITH raw_invoices AS (
+  SELECT * FROM `online_retail_2_dataset.sheet1`
+  UNION DISTINCT
+  SELECT * FROM `online_retail_2_dataset.sheet2`
+),
+
+typed AS (
+  SELECT
+    CAST(Invoice AS STRING)                              AS Invoice,
+    UPPER(TRIM(CAST(StockCode AS STRING)))               AS StockCode,
+    NULLIF(TRIM(CAST(`Customer ID` AS STRING)), '')      AS CustomerID,
+    INITCAP(TRIM(REGEXP_REPLACE(Description, r'\s+', ' '))) AS Description_Cleaned,
+    DATE(InvoiceDate)                                    AS InvoiceDate,
+    FORMAT_DATETIME('%F %T', DATETIME(InvoiceDate))      AS InvoiceDateTime,
+    ROUND(CAST(Price AS NUMERIC), 2)                     AS UnitPrice,
+    Quantity,
+    TRIM(Country)                                        AS Country
+  FROM raw_invoices
+),
+
+canonical AS (
+  SELECT StockCode, Description_Cleaned AS Description
+  FROM typed
+  WHERE Description_Cleaned IS NOT NULL AND Description_Cleaned != ''
+  GROUP BY StockCode, Description_Cleaned
+  QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY StockCode
+    ORDER BY COUNT(*) DESC, Description_Cleaned
+  ) = 1
+),
+
+cleaned_invoices AS (
+  SELECT
+    t.Invoice,
+    t.StockCode,
+    t.CustomerID,
+    COALESCE(c.Description, t.Description_Cleaned) AS Description,
+    t.InvoiceDate,
+    t.InvoiceDateTime,
+    t.UnitPrice,
+    t.Quantity,
+    t.Country,
+    ROUND(t.UnitPrice * t.Quantity, 2)                  AS Sales,
+    t.UnitPrice = 0                                     AS Giveaway,
+    t.UnitPrice < 0                                     AS NegativePrice,
+    STARTS_WITH(UPPER(t.Invoice), 'C')                  AS Canceled,
+    t.Quantity < 0                                      AS Returned,
+    REGEXP_CONTAINS(t.StockCode, r'^\d{5}')             AS IsMerchandise
+  FROM typed AS t
+  LEFT JOIN canonical AS c
+    ON t.StockCode = c.StockCode
+),
+
+sales_lines AS (
+  SELECT
+    *,
+    ROW_NUMBER() OVER (
+      PARTITION BY CustomerID, StockCode, Quantity
+      ORDER BY InvoiceDateTime, Invoice
+    ) AS pair_no
+  FROM cleaned_invoices
+  WHERE Quantity > 0
+    AND UnitPrice > 0
+    AND NOT Canceled
+    AND CustomerID IS NOT NULL
+    AND Country != 'Unspecified'
+    AND InvoiceDate >= DATE '2010-01-01'
+),
+
+cancel_lines AS (
+  SELECT
+    CustomerID,
+    StockCode,
+    -Quantity AS Quantity,
+    InvoiceDate AS CancelDate,
+    ROW_NUMBER() OVER (
+      PARTITION BY CustomerID, StockCode, -Quantity
+      ORDER BY InvoiceDateTime, Invoice
+    ) AS pair_no
+  FROM cleaned_invoices
+  WHERE Canceled
+    AND Quantity < 0
+    AND CustomerID IS NOT NULL
+)
+
+SELECT
+  s.* EXCEPT (pair_no),
+  c.CancelDate IS NOT NULL AS ReversedByCancellation
+FROM sales_lines AS s
+LEFT JOIN cancel_lines AS c
+  ON  s.CustomerID = c.CustomerID
+  AND s.StockCode  = c.StockCode
+  AND s.Quantity   = c.Quantity
+  AND s.pair_no    = c.pair_no
+  AND c.CancelDate BETWEEN s.InvoiceDate AND DATE_ADD(s.InvoiceDate, INTERVAL 30 DAY)
+WHERE NOT (exclude_reversed_orders AND c.CancelDate IS NOT NULL);
