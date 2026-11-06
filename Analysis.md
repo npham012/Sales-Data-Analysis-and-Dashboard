@@ -1,6 +1,6 @@
 # Online Retail Sales Analysis
 
-Full write-up of the analysis behind the [Sales Dashboard](./Tableau%20Dashboard/Online%20Retail%20Sales%20Dashboard.twb). For the project overview, pipeline and repo layout, see the [README](README.md). Every figure below comes from a query in this repo; the raw outputs are in [`Query Results`](./Query%20Results/).
+Full write-up of the analysis behind the Sales Dashboard. For the project overview, pipeline and repo layout, see the [README](README.md). Every figure below comes from a query in this repo; the raw outputs are in [`Query Results`](./Query%20Results/).
 
 **Dataset:** Online Retail II (UK-based giftware retailer, mostly wholesale customers), 4 Jan 2010 – 9 Dec 2011 after cleaning. All amounts are in £ (GBP).
 
