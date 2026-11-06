@@ -46,9 +46,8 @@ The dataset covers roughly two years of transactions (2010–2011) from a wholes
 
 ```
 .
-├── Documentation/
-│   ├── README.md
-│   └── Analysis.md                          # Full analysis and recommendations
+├── README.md
+├── Analysis.md                              # Full analysis and recommendations
 ├── SQL Queries/
 │   ├── 3_Layer_Data_Processing_Script.sql   # Raw → clean invoice → sales layers
 │   ├── Data_Validation.sql                  # Data-quality checks and reconciliation
