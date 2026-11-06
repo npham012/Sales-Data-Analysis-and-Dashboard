@@ -34,7 +34,7 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='cleaned_sales' name='textscan.1f5i2p80ydfy5t12zgaji1lov89t'>
-            <connection class='textscan' directory='C:/Users/Nick/Desktop/Projects/Github Projects Repos/Sales-Data-Analysis-and-Dashboard/Data' workgroup-auth-mode='as-is' />
+            <connection class='textscan' directory='$home/Desktop/Projects/Github Projects Repos/Sales-Data-Analysis-and-Dashboard/Data' workgroup-auth-mode='as-is' />
           </named-connection>
         </named-connections>
         <relation connection='textscan.1f5i2p80ydfy5t12zgaji1lov89t' name='cleaned_sales.csv' table='[cleaned_sales#csv]' type='table'>
@@ -383,7 +383,7 @@
         <groupfilter function='member' level='[Calculation_1256248223649793]' member='&quot;International&quot;' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
       </group>
       <extract count='-1' enabled='true' object-id='' units='records' user-specific='false'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='C:/Users/Nick/Desktop/Projects/Github Projects Repos/Sales-Data-Analysis-and-Dashboard/Tableau Dashboard/Online Retail Sales Dashboard.twb Files/federated.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='11/04/2026 05:24:52 PM' username=''>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='$home/Desktop/Projects/Github Projects Repos/Sales-Data-Analysis-and-Dashboard/Tableau Dashboard/Online Retail Sales Dashboard.twb Files/federated.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='11/04/2026 05:24:52 PM' username=''>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
