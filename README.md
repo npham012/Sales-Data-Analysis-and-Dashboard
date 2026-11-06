@@ -120,7 +120,10 @@ Every exclusion is reconciled from 1,067,371 source lines to 744,786 sales lines
 2. Run `SQL Queries/3_Layer_Data_Processing_Script.sql` to create `raw_invoices`, `cleaned_invoices` and `cleaned_sales`. Set `exclude_reversed_orders` to `FALSE` at the top of the script to keep orders that were later cancelled.
 3. Run `SQL Queries/Data_Validation.sql` to check the data and reconcile the exclusions.
 4. Run `SQL Queries/Observation_Queries.sql`, `SQL Queries/Repeat_Purchase_Rate.sql` and `SQL Queries/Customer_Retention.sql` to reproduce every number in the analysis.
-5. Export `cleaned_sales` to CSV and open `tableau/Sales_Dashboard.twb`, re-pointing the data source to your file by creating or editing a connection.
+5. Export `cleaned_sales` to CSV
+6. Visit the live dashboard at: https://public.tableau.com/shared/2TMCWW8RW?:display_count=n&:origin=viz_share_link
+7. Download a copy of the dashboard, `Online Retail Sales Dashboard.twbx`
+8. Open `Online Retail Sales Dashboard.twbx` and re-point the data source to `cleaned_sales.csv` by creating or editing a connection.
 
 ## Limitations
 
