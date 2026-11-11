@@ -47,7 +47,7 @@ The dataset covers roughly two years of transactions (2010–2011) from a wholes
 ```
 .
 ├── Data/
-│   ├── Source
+│   ├── Source/
 │   │   ├── Sheet 1.csv                     # Sheet 1 extracted from raw
 │   │   ├── Sheet 2.csv                     # Sheet 2 extracted from raw
 │   │   └── online_retail_II.xlsx           # Raw dataset from source
