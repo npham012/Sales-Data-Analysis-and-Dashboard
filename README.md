@@ -46,24 +46,38 @@ The dataset covers roughly two years of transactions (2010–2011) from a wholes
 
 ```
 .
-├── Documentation/
-│   ├── README.md
-│   └── Analysis.md                          # Full analysis and recommendations
-├── SQL Queries/
-│   ├── 3_Layer_Data_Processing_Script.sql   # Raw → clean invoice → sales layers
-│   ├── Data_Validation.sql                  # Data-quality checks and reconciliation
-│   ├── Observation_Queries.sql              # Every figure used in the analysis
-│   ├── Repeat_Purchase_Rate.sql             # Repeat purchase rate by year and market
-│   └── Customer_Retention.sql               # 2010 → 2011 retention and lapsed revenue
+├── Data/
+│   ├── Source
+│   │   ├── Sheet 1.csv                     # Sheet 1 extracted from raw
+│   │   ├── Sheet 2.csv                     # Sheet 2 extracted from raw
+│   │   └── online_retail_II.xlsx           # Raw dataset from source
+│   ├── cleaned_invoices.csv                # Cleaned Invoice layer
+│   ├── cleaned_sales.csv                   # Cleaned sales layer, used for Dashboarding
+│   └──raw_invoices.csv                     # Unionized data from sheets 1 and 2
+│
+├── Figures/
+│   ├── Online Retail Sales Dashboard.png
+│   ├── customer_concentration.png
+│   ├── monthly_sales_by_market.png
+│   └── yoy_jan_nov.png
+│
 ├── Query Results/                           # Saved query outputs
 │   ├── Validation_Results.md
 │   ├── Observation_Results.md
 │   ├── Repeat_Purchase_Rate.md
 │   └── Customer_Retention.md
-└── Figures/
-│   ├── customer_concentration.png
-│   ├── monthly_sales_by_market.png
-│   └── yoy_jan_nov.png
+│
+├── SQL Queries/
+│   ├── 1_Step_Query_Script.sql              # Raw -> clean sales directly
+│   ├── 3_Layer_Data_Processing_Script.sql   # Raw → clean invoice → sales layers
+│   ├── Data_Validation.sql                  # Data-quality checks and reconciliation
+│   ├── Observation_Queries.sql              # Every figure used in the analysis
+│   ├── Repeat_Purchase_Rate.sql             # Repeat purchase rate by year and market
+│   └── Customer_Retention.sql               # 2010 → 2011 retention and lapsed revenue
+│
+├── .gitattributes                           # Used with Git LFS to track a dataset file too large for normal repository upload.
+├── Analysis.md                              # Full analysis and recommendations
+└──  README.md
 ```
 
 ## Data pipeline
