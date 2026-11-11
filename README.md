@@ -60,9 +60,6 @@ The dataset covers roughly two years of transactions (2010–2011) from a wholes
 │   ├── Observation_Results.md
 │   ├── Repeat_Purchase_Rate.md
 │   └── Customer_Retention.md
-├── Tableau Dashboard/
-│   ├── Online Retail Sales Dashboard.twb    # Tableau Dashboard Workbook
-│   └── Online Retail Sales Dashboard.png    # Tableau Dashboard Preview Image
 └── Figures/
 │   ├── customer_concentration.png
 │   ├── monthly_sales_by_market.png
